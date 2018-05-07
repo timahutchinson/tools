@@ -1,13 +1,13 @@
 #! /bin/bash
 
-for package in $( pip list --outdated --format=legacy | awk '{print $1}' ) ; do
-  if ! [[ $package =~ ^\( ]] ; then
-    pip install -U ${package}
+for package in $( pip list --outdated | awk '{print $1}' ) ; do
+  if ! [[ $package =~ (^Package|^-) ]] ; then
+    pip install -U $package
   fi
 done
 
-for package in $( pip3 list --outdated --format=legacy | awk '{print $1}' ) ; do
-  if ! [[ $package =~ ^\( ]] ; then
-    pip3 install -U ${package}
+for package in $( pip3 list --outdated  | awk '{print $1}' ) ; do
+  if ! [[ $package =~ (^Package|^-) ]] ; then
+    pip3 install -U $package
   fi
 done
