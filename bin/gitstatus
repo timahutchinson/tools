@@ -1,46 +1,46 @@
 #!/bin/bash
- 
-dir="`pwd`"
+
+dir="$(pwd)"
 dir="$dir/*"
- 
+
 for f in $dir
 do
     [ -d "${f}" ] || continue
- 
+
     echo -en "\033[0;35m"
     echo "${f}"
     echo -en "\033[0m"
- 
+
     if [ -d "$f/.git" ]
     then
         changed=0
-        cd $f
- 
-        if [ $(git status | grep modified -c) -ne 0 ]
+        cd $f || exit
+
+        if [ "$(git status | grep modified -c)" -ne 0 ]
         then
             changed=1
             echo -en "\033[0;31m"
             echo "Modified files"
             echo -en "\033[0m"
         fi
- 
-        if [ $(git status | grep Untracked -c) -ne 0 ]
+
+        if [ "$(git status | grep Untracked -c)" -ne 0 ]
         then
             changed=1
             echo -en "\033[0;31m"
             echo "Untracked files"
             echo -en "\033[0m"
         fi
- 
+
         if [ $changed -eq 0 ]
         then
             echo "Nothing to commit"
         fi
- 
-        cd ../
+
+        cd ../ || exit
     else
         echo "Not a git repository"
     fi
- 
+
     echo
 done
