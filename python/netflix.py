@@ -13,17 +13,17 @@ def click(x, y, dummymode=False):
     pyautogui.click(x, y)
 
 
-DUMMYMODE = True
+DUMMYMODE = False
 dispsize = pyautogui.size()
 click_x, click_y = (dispsize[0]//2, int(dispsize[1]*0.4))
 
-chunk = 1024
+chunk = 2048
 audio_form = pyaudio.paFloat32
 channels = 2
 rate = 44100
 refresh_time = 10.0
 ambient_mem = 2
-threshold = chunk * 0.2
+threshold = chunk * 0.1
 delta_t_click = 1.0
 
 ambient = 10**-10
