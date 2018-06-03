@@ -4,7 +4,7 @@ BACKUP_DIR="$HOME/.backups"
 declare -a INPUT_FILE
 OUTPUT_FILE=""
 
-echoerr () 
+echoerr ()
 {
     echo "$@" 1>&2
 }
@@ -15,13 +15,13 @@ die ()
     exit
 }
 
-usage () 
+usage ()
 {
     echo "Backup a file or directory"
     echo "$0 [-h|--help] file-or-directory [-o|--output output-file]"
 }
 
-backupRegFile () 
+backupRegFile ()
 {
     outfile="${BACKUP_DIR}/$(basename $1).bak"
 
@@ -80,7 +80,7 @@ backupDir ()
     fi
 }
 
-backupFile () 
+backupFile ()
 {
     if [ -f "$1" ]; then
         backupRegFile "$1"
