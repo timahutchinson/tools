@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division, print_function
 import time
 
 import numpy as np
@@ -18,7 +18,7 @@ dispsize = pyautogui.size()
 click_x, click_y = (dispsize[0]//2, int(dispsize[1]*0.4))
 
 chunk = 1024
-format = pyaudio.paFloat32
+audio_form = pyaudio.paFloat32
 channels = 2
 rate = 44100
 refresh_time = 10.0
@@ -32,7 +32,7 @@ stopped = False
 last_click = time.time() - delta_t_click
 while True:
     p = pyaudio.PyAudio()
-    stream = p.open(format=format,
+    stream = p.open(format=audio_form,
                     channels=channels,
                     rate=rate,
                     input=True,
