@@ -15,7 +15,7 @@ def click(x, y, dummymode=False):
 
 DUMMYMODE = True
 dispsize = pyautogui.size()
-clickpos = (dispsize[0]//2, int(dispsize[1]*0.4))
+click_x, click_y = (dispsize[0]//2, int(dispsize[1]*0.4))
 
 chunk = 1024
 format = pyaudio.paFloat32
@@ -23,15 +23,14 @@ channels = 2
 rate = 44100
 refresh_time = 10.0
 ambient_mem = 2
-threshold = chunk * 0.3
+threshold = chunk * 0.2
 delta_t_click = 1.0
 
 ambient = 10**-10
 old_data = []
 stopped = False
 last_click = time.time() - delta_t_click
-
-while not stopped:
+while True:
     p = pyaudio.PyAudio()
     stream = p.open(format=format,
                     channels=channels,
@@ -42,7 +41,6 @@ while not stopped:
     n_frames = int(rate / chunk * refresh_time)
     frame_size = chunk // 2
     data = np.zeros(n_frames*frame_size, dtype=np.float32) * np.NaN
-    t0 = time.time()
     for i in range(n_frames):
         data[i*frame_size:(i+1)*frame_size] = np.fromstring(
             stream.read(chunk), count=frame_size)
@@ -53,13 +51,8 @@ while not stopped:
                   ambient).astype(int) > threshold:
             print("Mean noise level: %s" %
                   (np.mean(data[i * frame_size:(i+1) * frame_size])))
-            if clickpos is None:
-                x = np.random.randint(0, dispsize[0])
-                y = np.random.randint(0, dispsize[1])
-            else:
-                x, y = clickpos
-            if time.time() > last_click + delta_t_click:
-                click(x, y, dummymode=DUMMYMODE)
+            if time.time() > (last_click + delta_t_click):
+                click(click_x, click_y, dummymode=DUMMYMODE)
                 last_click = time.time()
     old_data.append(data)
     if len(old_data) > ambient_mem:
