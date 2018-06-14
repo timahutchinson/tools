@@ -1,8 +1,8 @@
 #! /bin/bash
 
-for package in $( pip list --outdated | awk '{print $1}' ) ; do
+for package in $( pip2 list --outdated | awk '{print $1}' ) ; do
   if ! [[ $package =~ (^Package|^-) ]] ; then
-    pip install -U "$package"
+    pip2 install -U "$package"
   fi
 done
 
