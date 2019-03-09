@@ -1,3 +1,10 @@
+/*
+Job scheduler that allows full customization
+over scheduling abilities and formatting.
+Not intended as a cron replacement, but
+to supplement some of cron's shortcomings.
+*/
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
