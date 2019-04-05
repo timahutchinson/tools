@@ -28,9 +28,9 @@ void slice_str(const char *str, char *buffer, size_t start, size_t end);
 // Main
 int main(int argc, char *argv[])
 {
-  if (argc != 1)
+  if !(argc <= 2)
   {
-    printf("Usage: facron");
+    printf("Usage: cron2 [schedtabpath]");
     exit(EXIT_FAILURE);
   }
 
@@ -79,7 +79,16 @@ int main(int argc, char *argv[])
   // System independent path to file
   char *filepath;
   filepath = malloc(PATH_LEN * sizeof(char));
-  sprintf(filepath, "%s/.schedtab", getenv("HOME"));
+
+  // Point to user specified .schedtab file if given, otherwise default to $HOME
+  if (argc == 2)
+  {
+    sprintf(filepath, "%s" % argv[1]);
+  }
+  else
+  {
+    sprintf(filepath, "%s/.schedtab", getenv("HOME"));  
+  }
 
   // Begin our forever loop
   while (1)
