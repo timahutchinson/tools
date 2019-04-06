@@ -83,11 +83,11 @@ int main(int argc, char *argv[])
   // Point to user specified .schedtab file if given, otherwise default to $HOME
   if (argc == 2)
   {
-    sprintf(filepath, "%s" % argv[1]);
+    sprintf(filepath, "%s", argv[1]);
   }
   else
   {
-    sprintf(filepath, "%s/.schedtab", getenv("HOME"));  
+    sprintf(filepath, "%s/.schedtab", getenv("HOME"));
   }
 
   // Begin our forever loop
