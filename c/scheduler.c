@@ -20,6 +20,7 @@ behavior.
 // Maximum line length (for memory allocation when reading the file)
 #define LINE_LEN 1000
 #define PATH_LEN 100
+#define COM_ARGS 10
 
 // Function to write a slice of a string `str` into memory at the address of `buffer`,
 // slicing from index `start` to index `end`
@@ -28,7 +29,7 @@ void slice_str(const char *str, char *buffer, size_t start, size_t end);
 // Main
 int main(int argc, char *argv[])
 {
-  if !(argc <= 2)
+  if (argc > 2)
   {
     printf("Usage: cron2 [schedtabpath]");
     exit(EXIT_FAILURE);
