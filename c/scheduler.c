@@ -8,6 +8,7 @@ behavior.
 
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,6 +50,9 @@ int main(int argc, char *argv[])
   {
     exit(EXIT_SUCCESS);
   }
+
+  // Let init process reap children
+  signal(SIGCHLD, SIG_IGN);
 
   // Change the file mode mask so we can write to a log
   umask(0);
@@ -314,7 +318,7 @@ int main(int argc, char *argv[])
                                 int k = 0;
                                 while (comch != NULL)
                                 {
-                                    comargv[k] = pch;
+                                    comargv[k] = comch;
                                     comch = strtok(NULL, " ");
                                     k++;
                                 }
