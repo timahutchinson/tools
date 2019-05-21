@@ -349,10 +349,9 @@ int main(int argc, char *argv[])
         }
       }
     }
-    free(filepath);
     sleep(60);
   }
-
+  free(filepath);
   exit(EXIT_SUCCESS);
 }
 
