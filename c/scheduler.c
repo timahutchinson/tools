@@ -108,229 +108,231 @@ int main(int argc, char *argv[])
       // Read line by line
       while(fgets(buffer, LINE_LEN, fp) != NULL)
       {
-        // Array to hold the schedule
-        char sched[14];
-
-        // Skip the line if it's commented
-        if (buffer[0] != '#')
+        // Ensure the line isn't blank
+        if (buffer[0] != '\n')
         {
 
-          // Copy the line (because strtok alters in place)
-          char bcpy[LINE_LEN];
-          strcpy(bcpy, buffer);
+          // Skip the line if it's commented
+          if (buffer[0] != '#')
+          {
 
-          // Split the input line on whitespace and store into time variables
-          char *pch;
-          pch = strtok(bcpy, " ");
-          int i = 0;
-          char minute[6], hr[6], day[6], mth[6], wkday[4];
-          while (i < 5)
-          {
-            if (i == 0)
-            {
-              strcpy(minute, pch);
-            }
-            else if (i == 1)
-            {
-              strcpy(hr, pch);
-            }
-            else if (i == 2)
-            {
-              strcpy(day, pch);
-            }
-            else if (i == 3)
-            {
-              strcpy(mth, pch);
-            }
-            else if (i == 4)
-            {
-              strcpy(wkday, pch);
-            }
-            pch = strtok(NULL, " ");
-            i++;
-          }
+            // Copy the line (because strtok alters in place)
+            char bcpy[LINE_LEN];
+            strcpy(bcpy, buffer);
 
-          // Get the scheduled command
-          int j = 0, count = 0;
-          while (count < 5)
-          {
-            if (buffer[j] == ' ')
+            // Split the input line on whitespace and store into time variables
+            char *pch;
+            pch = strtok(bcpy, " ");
+            int i = 0;
+            char minute[6], hr[6], day[6], mth[6], wkday[4];
+            while (i < 5)
             {
-              count++;
-            }
-            j++;
-          }
-          char command[LINE_LEN];
-          slice_str(buffer, command, j, strlen(buffer));
-
-          // Get the current time and date
-          time_t theTime = time(NULL);
-          struct tm *aTime = localtime(&theTime);
-          int currMinute = aTime->tm_min;
-          int currHr = aTime->tm_hour;
-          int currDay = aTime->tm_mday;
-          int currMth = aTime->tm_mon + 1; // localtime() returns months in the range 0-11
-          int currWkday = aTime->tm_wday;
-
-          char *cPos;
-          // Split minute on "-" in case ranges are provided
-          char lowerMinute[3], upperMinute[3];
-          cPos = strchr(minute, '-');
-          if (cPos != NULL)
-          {
-            strcpy(lowerMinute, strtok(minute, "-"));
-            strcpy(upperMinute, strtok(NULL, "-"));
-          }
-          else
-          {
-            if (strcmp(minute, "*") == 0)
-            {
-              strcpy(lowerMinute, "0");
-              strcpy(upperMinute, "59");
-            }
-            else
-            {
-              strcpy(lowerMinute, minute);
-              strcpy(upperMinute, minute);
-            }
-          }
-
-          // And hour...
-          char lowerHr[3], upperHr[3];
-          cPos = strchr(hr, '-');
-          if (cPos != NULL)
-          {
-            strcpy(lowerHr, strtok(hr, "-"));
-            strcpy(upperHr, strtok(NULL, "-"));
-          }
-          else
-          {
-            if (strcmp(hr, "*") == 0)
-            {
-              strcpy(lowerHr, "0");
-              strcpy(upperHr, "23");
-            }
-            else
-            {
-              strcpy(lowerHr, hr);
-              strcpy(upperHr, hr);
-            }
-          }
-
-          // And day...
-          char lowerDay[3], upperDay[3];
-          cPos = strchr(day, '-');
-          if (cPos != NULL)
-          {
-            strcpy(lowerDay, strtok(day, "-"));
-            strcpy(upperDay, strtok(NULL, "-"));
-          }
-          else
-          {
-            if (strcmp(day, "*") == 0)
-            {
-              strcpy(lowerDay, "1");
-              strcpy(upperDay, "31");
-            }
-            else
-            {
-              strcpy(lowerDay, day);
-              strcpy(upperDay, day);
-            }
-          }
-
-          // And month...
-          char lowerMth[3], upperMth[3];
-          cPos = strchr(mth, '-');
-          if (cPos != NULL)
-          {
-            strcpy(lowerMth, strtok(mth, "-"));
-            strcpy(upperMth, strtok(NULL, "-"));
-          }
-          else
-          {
-            if (strcmp(mth, "*") == 0)
-            {
-              strcpy(lowerMth, "1");
-              strcpy(upperMth, "12");
-            }
-            else
-            {
-              strcpy(lowerMth, mth);
-              strcpy(upperMth, mth);
-            }
-          }
-
-          // And finally weekday...
-          char lowerWkday[3], upperWkday[3];
-          cPos = strchr(wkday, '-');
-          if (cPos != NULL)
-          {
-            strcpy(lowerWkday, strtok(wkday, "-"));
-            strcpy(upperWkday, strtok(NULL, "-"));
-          }
-          else
-          {
-            if (strcmp(wkday, "*") == 0)
-            {
-              strcpy(lowerWkday, "0");
-              strcpy(upperWkday, "6");
-            }
-            else
-            {
-              strcpy(lowerWkday, wkday);
-              strcpy(upperWkday, wkday);
-            }
-          }
-
-          // Loop over all ranges of possible times
-          for (int mthLoop = atoi(lowerMth); mthLoop <= atoi(upperMth); mthLoop++)
-          {
-            if (currMth == mthLoop)
-            {
-              for (int dayLoop = atoi(lowerDay); dayLoop <= atoi(upperDay); dayLoop++)
+              if (i == 0)
               {
-                if (currDay == dayLoop)
+                strcpy(minute, pch);
+              }
+              else if (i == 1)
+              {
+                strcpy(hr, pch);
+              }
+              else if (i == 2)
+              {
+                strcpy(day, pch);
+              }
+              else if (i == 3)
+              {
+                strcpy(mth, pch);
+              }
+              else if (i == 4)
+              {
+                strcpy(wkday, pch);
+              }
+              pch = strtok(NULL, " ");
+              i++;
+            }
+
+            // Get the scheduled command
+            int j = 0, count = 0;
+            while (count < 5)
+            {
+              if (buffer[j] == ' ')
+              {
+                count++;
+              }
+              j++;
+            }
+            char command[LINE_LEN];
+            slice_str(buffer, command, j, strlen(buffer));
+
+            // Get the current time and date
+            time_t theTime = time(NULL);
+            struct tm *aTime = localtime(&theTime);
+            int currMinute = aTime->tm_min;
+            int currHr = aTime->tm_hour;
+            int currDay = aTime->tm_mday;
+            int currMth = aTime->tm_mon + 1; // localtime() returns months in the range 0-11
+            int currWkday = aTime->tm_wday;
+
+            char *cPos;
+            // Split minute on "-" in case ranges are provided
+            char lowerMinute[3], upperMinute[3];
+            cPos = strchr(minute, '-');
+            if (cPos != NULL)
+            {
+              strcpy(lowerMinute, strtok(minute, "-"));
+              strcpy(upperMinute, strtok(NULL, "-"));
+            }
+            else
+            {
+              if (strcmp(minute, "*") == 0)
+              {
+                strcpy(lowerMinute, "0");
+                strcpy(upperMinute, "59");
+              }
+              else
+              {
+                strcpy(lowerMinute, minute);
+                strcpy(upperMinute, minute);
+              }
+            }
+
+            // And hour...
+            char lowerHr[3], upperHr[3];
+            cPos = strchr(hr, '-');
+            if (cPos != NULL)
+            {
+              strcpy(lowerHr, strtok(hr, "-"));
+              strcpy(upperHr, strtok(NULL, "-"));
+            }
+            else
+            {
+              if (strcmp(hr, "*") == 0)
+              {
+                strcpy(lowerHr, "0");
+                strcpy(upperHr, "23");
+              }
+              else
+              {
+                strcpy(lowerHr, hr);
+                strcpy(upperHr, hr);
+              }
+            }
+
+            // And day...
+            char lowerDay[3], upperDay[3];
+            cPos = strchr(day, '-');
+            if (cPos != NULL)
+            {
+              strcpy(lowerDay, strtok(day, "-"));
+              strcpy(upperDay, strtok(NULL, "-"));
+            }
+            else
+            {
+              if (strcmp(day, "*") == 0)
+              {
+                strcpy(lowerDay, "1");
+                strcpy(upperDay, "31");
+              }
+              else
+              {
+                strcpy(lowerDay, day);
+                strcpy(upperDay, day);
+              }
+            }
+
+            // And month...
+            char lowerMth[3], upperMth[3];
+            cPos = strchr(mth, '-');
+            if (cPos != NULL)
+            {
+              strcpy(lowerMth, strtok(mth, "-"));
+              strcpy(upperMth, strtok(NULL, "-"));
+            }
+            else
+            {
+              if (strcmp(mth, "*") == 0)
+              {
+                strcpy(lowerMth, "1");
+                strcpy(upperMth, "12");
+              }
+              else
+              {
+                strcpy(lowerMth, mth);
+                strcpy(upperMth, mth);
+              }
+            }
+
+            // And finally weekday...
+            char lowerWkday[3], upperWkday[3];
+            cPos = strchr(wkday, '-');
+            if (cPos != NULL)
+            {
+              strcpy(lowerWkday, strtok(wkday, "-"));
+              strcpy(upperWkday, strtok(NULL, "-"));
+            }
+            else
+            {
+              if (strcmp(wkday, "*") == 0)
+              {
+                strcpy(lowerWkday, "0");
+                strcpy(upperWkday, "6");
+              }
+              else
+              {
+                strcpy(lowerWkday, wkday);
+                strcpy(upperWkday, wkday);
+              }
+            }
+
+            // Loop over all ranges of possible times
+            for (int mthLoop = atoi(lowerMth); mthLoop <= atoi(upperMth); mthLoop++)
+            {
+              if (currMth == mthLoop)
+              {
+                for (int dayLoop = atoi(lowerDay); dayLoop <= atoi(upperDay); dayLoop++)
                 {
-                  for (int wkdayLoop = atoi(lowerWkday); wkdayLoop <= atoi(upperWkday); wkdayLoop++)
+                  if (currDay == dayLoop)
                   {
-                    if (currWkday == wkdayLoop)
+                    for (int wkdayLoop = atoi(lowerWkday); wkdayLoop <= atoi(upperWkday); wkdayLoop++)
                     {
-                      for (int hrLoop = atoi(lowerHr); hrLoop <= atoi(upperHr); hrLoop++)
+                      if (currWkday == wkdayLoop)
                       {
-                        if (currHr == hrLoop)
+                        for (int hrLoop = atoi(lowerHr); hrLoop <= atoi(upperHr); hrLoop++)
                         {
-                          for (int minuteLoop = atoi(lowerMinute); minuteLoop <= atoi(upperMinute); minuteLoop++)
+                          if (currHr == hrLoop)
                           {
-                            if (currMinute == minuteLoop)
+                            for (int minuteLoop = atoi(lowerMinute); minuteLoop <= atoi(upperMinute); minuteLoop++)
                             {
-                              // Fork grandchild process that can execvp the job
-                              pid_t pid2, sid2;
-                              pid2 = fork();
-                              if (pid2 == 0)
+                              if (currMinute == minuteLoop)
                               {
-                                sid2 = setsid();
-
-                                // Copy and split the command into constituent parts
-                                char *comargv[COM_ARGS], *comch, comcpy[LINE_LEN];
-                                strcpy(comcpy, command);
-                                comch = strtok(comcpy, " ");
-                                int k = 0;
-                                while (comch != NULL)
+                                // Fork grandchild process that can execvp the job
+                                pid_t pid2, sid2;
+                                pid2 = fork();
+                                if (pid2 == 0)
                                 {
-                                    comargv[k] = comch;
-                                    comch = strtok(NULL, " ");
-                                    k++;
-                                }
+                                  sid2 = setsid();
 
-                                // Fill the remaining comargv values with NULL
-                                while (k < COM_ARGS)
-                                {
-                                    comargv[k] = NULL;
-                                    k++;
-                                }
+                                  // Copy and split the command into constituent parts
+                                  char *comargv[COM_ARGS], *comch, comcpy[LINE_LEN];
+                                  strcpy(comcpy, command);
+                                  comch = strtok(comcpy, " ");
+                                  int k = 0;
+                                  while (comch != NULL)
+                                  {
+                                      comargv[k] = comch;
+                                      comch = strtok(NULL, " ");
+                                      k++;
+                                  }
 
-                                execvp(comargv[0], comargv);
+                                  // Fill the remaining comargv values with NULL
+                                  while (k < COM_ARGS)
+                                  {
+                                      comargv[k] = NULL;
+                                      k++;
+                                  }
+
+                                  execvp(comargv[0], comargv);
+                                }
                               }
                             }
                           }
