@@ -320,6 +320,8 @@ int main(int argc, char *argv[])
                                   while (comch != NULL)
                                   {
                                       comargv[k] = comch;
+                                      // Safely strip newline characters
+                                      comargv[k][strcspn(comargv[k], "\r\n")] = 0;
                                       comch = strtok(NULL, " ");
                                       k++;
                                   }
